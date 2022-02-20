@@ -1,9 +1,23 @@
-import './App.css';
+import ContactForm from "./Components/ContactForm";
+import ContactList from "./Components/ContactList";
+import Filter from "./Components/Filter";
+import Wrapper from "./wrapper.styled";
+import { useSelector } from "react-redux";
 
-function App() {
+const App = () => {
+  const visibleContacts = useSelector((state) => state.contacts.items);
   return (
-    <div className="App"> TEST </div>
+    <Wrapper>
+      <ContactForm />
+
+      {visibleContacts.length > 0 && (
+        <div>
+          <Filter />
+          <ContactList />
+        </div>
+      )}
+    </Wrapper>
   );
-}
+};
 
 export default App;
