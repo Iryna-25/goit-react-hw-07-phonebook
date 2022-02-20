@@ -1,38 +1,46 @@
 import React, { useState, memo } from 'react';
-import { useSelector, useDispatch } from 'react-redux';
-
+import {
+  useGetContactsQuery,
+  useAddContactMutation,
+} from '../contacts.API';
 import PropTypes from 'prop-types';
 import { Header, Form, Input, Button } from './ContactForm.styled';
-import { addItem } from '../Redux/Contacts/contacts-actions';
 
 const ContactForm = () => {
   const [name, setName] = useState('');
   const [number, setNumber] = useState('');
 
-  const contacts = useSelector(state => state.contacts.items);
-  const dispatch = useDispatch();
+  const { data: contacts, error: contactsError } = useGetContactsQuery();
+  const [addContact] = useAddContactMutation();
 
   const handleSubmit = e => {
     e.preventDefault();
-    const normalizeName = textNormalize(name);
 
-    const isInContacts = contacts.some(
-      item => item.name.toLowerCase() === normalizeName,
-    );
+    if (contactsError) {
+      alert(`Server not responding`);
+      return;
+    }
 
-    if (isInContacts) {
+    const isInContacts = ({ name, number }) => {
+      const normalizedName = name.toLowerCase().replace(/\s+/g, '');
+      const normalizedNumber = number.replace(/\D/g, '');
+      return contacts.some(contact => {
+        return (
+          contact.name.toLowerCase().replace(/\s+/g, '') === normalizedName ||
+          contact.phone.replace(/\D/g, '') === normalizedNumber
+        );
+      });
+    };
+
+    if (isInContacts({ name, number })) {
       alert(`${name} is already in your contacts`);
       return;
     }
 
-    dispatch(addItem({ name, number }));
+    addContact({ name, number });
 
     setName('');
     setNumber('');
-  };
-
-  const textNormalize = text => {
-    return text.toLowerCase();
   };
 
   const handleChange = e => {
@@ -47,8 +55,8 @@ const ContactForm = () => {
   };
 
   return (
-    <div> 
-      <Header> Phonebook </Header>
+    <div>
+      <Header>Enter name and phone number: </Header>
       <Form onSubmit={handleSubmit}>
         <label>
           Name

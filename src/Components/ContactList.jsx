@@ -1,44 +1,60 @@
-import React from 'react';
+import { useEffect } from 'react';
 import PropTypes from 'prop-types';
-import { List, Item, DeleteButton } from './ContactsList.styled';
-import { useSelector, useDispatch } from 'react-redux';
-import { removeItem } from '../Redux/Contacts/contacts-actions';
-import { useMemo } from 'react';
+import toast, { Toaster } from 'react-hot-toast';
+import { List, Item, DeleteButton, Total } from './ContactsList.styled';
+import { useSelector } from 'react-redux';
+import {
+  useGetContactsQuery,
+  useDeleteContactMutation,
+} from '../contacts.API';
+import { getFilter } from '../Redux/Contacts/contacts-selector';
 
 const ContactList = () => {
-  const contacts = useSelector(state => state.contacts.items);
-  const filter = useSelector(state => state.contacts.filter);
-  const dispatch = useDispatch();
+  const filter = useSelector(getFilter);
+  const { data: contacts, error } = useGetContactsQuery();
+  const [onDelete] = useDeleteContactMutation();
 
-  const FilContacts = useMemo(() => {
-    const normalizedFilter = filter.toLowerCase();
-    return contacts.filter(({ name }) =>
+  const normalizedFilter = filter.toLowerCase();
+  let FilContacts = [];
+
+  if (contacts) {
+    FilContacts = contacts.filter(({ name }) =>
       name.toLowerCase().includes(normalizedFilter),
     );
-  }, [contacts, filter]);
+  }
+  useEffect(() => {
+    if (error) {
+      toast.error(`Server error`);
+    }
+  }, [error]);
 
   return (
-    <List>
-      {FilContacts.map(({ id, name, number }) => (
-        <Item key={id}>
-          {name} : {number}
-          {
-            <DeleteButton
-              type="button"
-              name="delete"
-              onClick={() => dispatch(removeItem(id))}
-            >
-              Delete
-            </DeleteButton>
-          }
-        </Item>
-      ))}
-    </List>
+    <>
+      {error && <Toaster />}
+      {!error && contacts && (
+        <List>
+          <Total>Total contacts : {FilContacts.length}</Total>
+          {FilContacts.map(({ id, name, phone }) => (
+            <Item key={id}>
+              {name} : {phone}
+              {
+                <DeleteButton
+                  type="button"
+                  name="delete"
+                  onClick={() => onDelete(id)}
+                >
+                  Delete
+                </DeleteButton>
+              }
+            </Item>
+          ))}
+        </List>
+      )}
+    </>
   );
 };
 
 ContactList.propTypes = {
-  removeItem: PropTypes.func,
   contacts: PropTypes.arrayOf(
     PropTypes.shape({
       id: PropTypes.string.isRequired,

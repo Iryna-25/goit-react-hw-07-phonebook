@@ -18,3 +18,10 @@ export const DeleteButton = styled.button`
   cursor: pointer;
   margin-left: 20px;
 `;
+
+export const Total = styled.h2`
+  text-align: center;
+  border: 1px solid #000;
+  background-color: greenyellow;
+  border-radius: 5px;
+`;

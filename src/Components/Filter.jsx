@@ -4,9 +4,10 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Header2, SearchInput } from './Filter.styled';
 import { changeFilter } from '../Redux/Contacts/contacts-actions';
+import { getFilter } from '../Redux/Contacts/contacts-reducer';
 
 const Filter = () => {
-  const filter = useSelector(state => state.contacts.filter);
+  const filter = useSelector(getFilter);
   const dispatch = useDispatch();
 
   const handleChange = e => dispatch(changeFilter(e.target.value));
