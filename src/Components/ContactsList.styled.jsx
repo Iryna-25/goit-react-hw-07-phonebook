@@ -13,15 +13,18 @@ export const Item = styled.li`
 `;
 export const DeleteButton = styled.button`
   border: 1px solid #000;
-  background-color: #2E8B57;
+  background-color: #FAEBD7;
   border-radius: 5px;
   cursor: pointer;
   margin-left: 20px;
 `;
 
 export const Total = styled.h2`
+  font-style: Arial;
+  font-size: 20px;
   text-align: center;
   border: 1px solid #000;
-  background-color: greenyellow;
+  background-color: #4B0082;
   border-radius: 5px;
+  color: #fff;
 `;

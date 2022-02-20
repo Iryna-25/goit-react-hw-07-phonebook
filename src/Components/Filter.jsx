@@ -4,7 +4,7 @@ import React from 'react';
 import PropTypes from 'prop-types';
 import { Header2, SearchInput } from './Filter.styled';
 import { changeFilter } from '../Redux/Contacts/contacts-actions';
-import { getFilter } from '../Redux/Contacts/contacts-reducer';
+import { getFilter } from '../Redux/Contacts/contacts-selector';
 
 const Filter = () => {
   const filter = useSelector(getFilter);
