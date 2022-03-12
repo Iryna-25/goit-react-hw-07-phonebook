@@ -33,10 +33,10 @@ const ContactList = () => {
       {error && <Toaster />}
       {!error && contacts && (
         <List>
-          <Total>Total contacts : {FilContacts.length}</Total>
-          {FilContacts.map(({ id, name, phone }) => (
+          <Total>Total contacts: {FilContacts.length}</Total>
+          {FilContacts.map(({ id, name, number }) => (
             <Item key={id}>
-              {name} : {phone}
+              {name} : {number}
               {
                 <DeleteButton
                   type="button"
