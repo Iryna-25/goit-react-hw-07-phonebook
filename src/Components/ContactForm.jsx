@@ -22,12 +22,12 @@ const ContactForm = () => {
     }
 
     const isInContacts = ({ name, number }) => {
-      const normalizedName = name.toLowerCase().replace(/\s+/g, '');
-      const normalizedNumber = number.replace(/\D/g, '');
+      const normalizedName = name.toLowerCase();
+      const normalizedNumber = number;
       return contacts.some(contact => {
         return (
-          contact.name.toLowerCase().replace(/\s+/g, '') === normalizedName ||
-          contact.phone.replace(/\D/g, '') === normalizedNumber
+          contact.name.toLowerCase() === normalizedName ||
+          contact.phone === normalizedNumber
         );
       });
     };
